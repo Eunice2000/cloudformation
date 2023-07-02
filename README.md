@@ -100,4 +100,6 @@ Replace `<STACK_NAME>` with the name of your stack. Confirm the deletion when pr
 
 ## Screenshot of Successful Deployment and Resources
 
-Add a screenshot of the CloudFormation stack's Outputs section, showing the created S3
+A![image](https://github.com/Eunice2000/cloudformation/assets/90851478/60aca43f-e8b3-4f81-90d8-4a6ec4c4beeb)
+![image](https://github.com/Eunice2000/cloudformation/assets/90851478/176e3d34-bd17-4cf7-946b-be0dd37fb7bd)
+
