@@ -1,3 +1,4 @@
+
 AWSTemplateFormatVersion: "2010-09-09"
 Description: "Creates S3 bucket"
 
@@ -5,27 +6,35 @@ Parameters:
   S3BucketName:
     Description: Enter S3 bucket name
     Type: String
-    MinLength: 3
-    MaxLength: 10
-    AllowedPattern: "[A-Za-z]+"
   EncryptionType:
     Description: Select the encryption type for the S3 bucket
     Type: String
     Default: SSE-S3
     AllowedValues:
       - SSE-S3
-      - KMS
+      - SSE-KMS
+  
+
+Conditions:
+  IsSSE-S3: !Equals [!Ref EncryptionType, SSE-S3]
+  IsSSE-KMS: !Equals [!Ref EncryptionType, SSE-KMS]
 
 Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref S3BucketName
-      # BucketEncryption:
-      #   ServerSideEncryptionConfiguration:
-      #     - ServerSideEncryptionByDefault:
-      #         SSEAlgorithm: !Ref EncryptionType
-
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              "Fn::If":
+                - IsSSE-S3
+                - SSEAlgorithm: AES256
+                - !Ref "AWS::NoValue"
+              "Fn::If":
+                - IsSSE-KMS
+                - SSEAlgorithm: aws:kms
+                - !Ref "AWS::NoValue"
 Outputs:
   BucketName:
     Value: !Ref 'S3Bucket'
@@ -33,4 +42,3 @@ Outputs:
     Value: !Ref 'EncryptionType'
   BucketARN:
     Value: !GetAtt 'S3Bucket.Arn'
-
